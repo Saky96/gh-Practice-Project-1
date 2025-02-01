@@ -15,7 +15,7 @@ jobs:
             -   name: Lint the project
                 run: npm run lint
             -   name: Build project
-                run: npm build
+                run: npm run build
             -   name: Deploy to cloud
                 run: echo "Deployed to AWS lambda..."
             
