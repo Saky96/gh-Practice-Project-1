@@ -1,7 +1,7 @@
 name: Build and deploy project
 on: [push]
 jobs:
-    build:
+    lint:
         runs-on: ubuntu-latest
         steps:
             -   name: Get code
@@ -14,10 +14,51 @@ jobs:
                 run: npm ci
             -   name: Lint the project
                 run: npm run lint
-            -   name: Build project
-                run: npm run build
             -   name: Deploy to cloud
                 run: echo "Deployed to AWS lambda..."
+    test:
+        needs: lint
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Get code
+                uses: actions/checkout@v4
+            -   name: Install node.js
+                uses: actions/setup-node@v4
+                with:
+                    node-version: 18
+            -   name: Install dependencies
+                run: npm ci
+            -   name: Run tests
+                run: npm run test
+    build:
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Get code
+                uses: actions/checkout@v4
+            -   name: Install node.js
+                uses: actions/setup-node@v4
+                with:
+                    node-version: 18
+            -   name: Install dependencies
+                run: npm ci
+            -   name: Build project
+                run: npm run build
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Get code
+                uses: actions/checkout@v4
+            -   name: Install node.js
+                uses: actions/setup-node@v4
+                with:
+                    node-version: 18
+            -   name: Install dependencies
+                run: npm ci
+            -   name: Deploy to cloud
+                run: echo "Deployed to AWS lambda..."            
+
             
 
             
